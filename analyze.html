@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Skin - Skin Health AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a73e8; /* Professional blue */
+            --primary-hover-color: #4285f4; 
+            --primary-dark-color: #0059c1; 
+            --background-color: #f0f4f8; /* Main page background */
+            --content-background: #ffffff; /* Card/container backgrounds */
+            --text-color: #333;
+            --light-text-color: #555;
+            --sidebar-text-color: #fff;
+            --border-color: #d1d5db; /* Softer border color */
+            --border-radius: 8px;
+            --card-shadow: 0px 4px 15px rgba(0, 0, 0, 0.06); /* Softer shadow */
+            --input-background: #f9fafb;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 275px;
+            background-color: var(--primary-color);
+            color: var(--sidebar-text-color);
+            display: flex;
+            flex-direction: column;
+            padding: 25px 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            margin: 0;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin: 18px 0;
+        }
+
+        .sidebar ul li a {
+            color: var(--sidebar-text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: var(--primary-hover-color);
+            transform: translateX(6px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .sidebar ul li a i {
+            margin-right: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px; 
+            height: 24px;
+        }
+
+        .sidebar ul li a i svg {
+            width: 24px; 
+            height: 24px;
+            color: var(--sidebar-text-color);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 40px; 
+            overflow-y: auto;
+            background-color: var(--background-color); 
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .page-header p {
+            font-size: 16px;
+            color: var(--light-text-color);
+            margin-top: 5px;
+        }
+
+
+        .upload-section { /* Replaces .upload-container for better semantics */
+            background: var(--content-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 35px 40px; /* Increased padding */
+            max-width: 700px; 
+            margin: 0 auto; 
+            border: 1px solid var(--border-color);
+        }
+
+        .upload-section h2 { /* Title within the upload card */
+            font-size: 22px; 
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--text-color); 
+            font-weight: 500;
+            text-align: left;
+        }
+        
+        .image-preview-area {
+            width: 100%;
+            max-width: 350px; 
+            min-height: 200px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px auto;
+            background-color: var(--input-background);
+            position: relative; /* For overlay text */
+            overflow: hidden; /* To contain the image */
+        }
+        #image-preview {
+            max-width: 100%;
+            max-height: 350px; /* Max height for preview */
+            border-radius: 6px; /* Slightly less than container for padding effect */
+            display: none; 
+        }
+        #image-preview-placeholder {
+            color: #888;
+            font-size: 15px;
+            text-align: center;
+            padding: 20px;
+        }
+        .upload-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center button if file input is hidden */
+            gap: 20px; /* Space between file input and button */
+            margin-bottom: 25px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block; /* Or block if you want it full width */
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .file-input-wrapper:hover {
+            background-color: #dfe3e7;
+        }
+        #file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; /* Make the default input invisible */
+            cursor: pointer;
+        }
+        #file-name-display {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--light-text-color);
+            min-height: 20px; /* Reserve space */
+        }
+
+
+        .analyze-button { /* Renamed from .upload-button */
+            background-color: var(--primary-color); 
+            color: var(--sidebar-text-color);
+            padding: 14px 35px; 
+            font-size: 17px; 
+            font-weight: 500;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .analyze-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .analyze-button:hover:not(:disabled) {
+            background-color: var(--primary-dark-color); 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .loader {
+            border: 5px solid #f3f3f3; 
+            border-top: 5px solid var(--primary-color); 
+            border-radius: 50%;
+            width: 40px; /* Larger loader */
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 25px auto; /* Increased margin */
+            display: none; 
+        }
+
+        .result-section { /* Replaces .result for better semantics */
+            margin-top: 30px;
+            padding: 25px 30px; /* Increased padding */
+            background-color: var(--content-background); 
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            text-align: left; 
+            animation: fadeIn 0.5s ease-in-out;
+            display: none; /* Initially hidden */
+        }
+        .result-section h3 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .result-section p {
+            font-size: 16px; 
+            color: var(--text-color);
+            margin: 10px 0; /* Adjusted spacing */
+            line-height: 1.7; /* Improved readability */
+        }
+        .result-section p strong { /* For labels like "File Name:" */
+            font-weight: 500;
+            color: var(--light-text-color);
+        }
+        .result-section .prediction-text { /* For the actual predicted value */
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .result-section .diseased {
+            color: #d93025; 
+        }
+        .result-section .healthy {
+            color: #1e8e3e; 
+        }
+        .confidence-details p {
+            font-size: 15px;
+            margin: 5px 0;
+        }
+
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Skin AI</h2>
+            <ul>
+                <li><a href="home.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></i> Home</a></li>
+                <li><a href="profile.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></i> Profile</a></li>
+                <li><a href="analyze.html" class="active"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg></i> Analyze Skin</a></li>
+                <li><a href="history.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></i> History</a></li>
+                <li><a href="settings.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></i> Settings</a></li>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1>Skin Image Analysis</h1>
+                <p>Upload an image of a skin lesion or concern to get a preliminary AI-powered analysis. Please remember this is not a substitute for professional medical advice.</p>
+            </div>
+
+            <div class="upload-section">
+                <h2>Upload Your Image</h2>
+                <div class="image-preview-area">
+                    <img id="image-preview" src="#" alt="Image Preview"/>
+                    <span id="image-preview-placeholder">Click below to select an image. JPG, PNG, or JPEG accepted.</span>
+                </div>
+                
+                <div class="upload-controls">
+                    <label for="file-input" class="file-input-wrapper" id="file-input-label">
+                        Choose Image
+                        <input type="file" id="file-input" accept="image/jpeg, image/png, image/jpg" onchange="previewImage(event)">
+                    </label>
+                    <div id="file-name-display">No file selected.</div>
+                    <button class="analyze-button" id="analyze-btn" onclick="analyzeImage()">
+                        Analyze Skin Image
+                    </button>
+                </div>
+                
+                <div class="loader" id="loader"></div>
+
+                <div class="result-section" id="result-box">
+                    <h3 id="result-title">Analysis Result</h3>
+                    <div id="result-content">
+                        <p>Your analysis results will appear here once the image is processed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const resultBox = document.getElementById('result-box');
+        const resultContent = document.getElementById('result-content'); // Target inner div for content
+        const resultTitle = document.getElementById('result-title');
+        const analyzeButton = document.getElementById('analyze-btn');
+        const loader = document.getElementById('loader');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePreviewPlaceholder = document.getElementById('image-preview-placeholder');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        const fileInputLabel = document.getElementById('file-input-label');
+
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e){
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    imagePreviewPlaceholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+                fileNameDisplay.textContent = file.name;
+                fileInputLabel.textContent = "Change Image"; // Change button text
+                resultBox.style.display = 'none'; 
+                resultContent.innerHTML = '<p>Your analysis results will appear here once the image is processed.</p>';
+                resultTitle.textContent = "Analysis Result";
+            } else {
+                imagePreview.src = '#';
+                imagePreview.style.display = 'none';
+                imagePreviewPlaceholder.style.display = 'block';
+                fileNameDisplay.textContent = 'No file selected.';
+                fileInputLabel.textContent = "Choose Image";
+            }
+        }
+
+        async function analyzeImage() {
+            if (!fileInput.files || !fileInput.files.length) {
+                alert('Please select an image file first.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            resultTitle.textContent = "Analyzing...";
+            resultContent.innerHTML = ''; // Clear previous results
+            resultBox.style.display = 'block'; 
+            analyzeButton.disabled = true;
+            loader.style.display = 'block'; // Show loader
+
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                analyzeButton.disabled = false;
+                loader.style.display = 'none'; // Hide loader
+
+                if (!response.ok) {
+                    let errorMsg = `Error: ${response.status} ${response.statusText}`;
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.error) {
+                            errorMsg = `Server Error: ${errorData.error}`;
+                        }
+                    } catch (e) { /* Ignore if response is not JSON */ }
+                    resultTitle.textContent = "Analysis Failed";
+                    resultContent.innerHTML = `<p class="diseased">${errorMsg}</p><p>Please try again or check server logs.</p>`;
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                     resultTitle.textContent = "Analysis Failed";
+                     resultContent.innerHTML = `<p class="diseased">${data.error}</p>`;
+                } else {
+                    resultTitle.textContent = "Analysis Complete";
+                    let predictionClassStyle = data.prediction === 'healthy' ? 'healthy' : 'diseased';
+                    
+                    let probabilitiesHtml = "";
+                    if (data.class_probabilities) {
+                        for (const className in data.class_probabilities) {
+                            probabilitiesHtml += `<p><strong>${className.charAt(0).toUpperCase() + className.slice(1)} Confidence:</strong> ${(data.class_probabilities[className] * 100).toFixed(2)}%</p>`;
+                        }
+                    } else {
+                        probabilitiesHtml += `<p><strong>Overall Confidence:</strong> ${(data.confidence * 100).toFixed(2)}% for ${data.prediction.toUpperCase()}</p>`;
+                    }
+
+                    resultContent.innerHTML = `
+                        <p><strong>File Name:</strong> ${file.name}</p>
+                        <p><strong>Predicted Condition:</strong> <span class="prediction-text ${predictionClassStyle}">${data.prediction.toUpperCase()}</span></p>
+                        ${probabilitiesHtml}
+                        <hr style="margin: 15px 0; border-color: var(--border-color);">
+                        <p style="font-size:14px; color: var(--light-text-color);"><i>Disclaimer: This AI analysis is for informational purposes only and does not constitute a medical diagnosis. Always consult with a qualified dermatologist or healthcare professional for any health concerns or before making any decisions related to your health.</i></p>
+                    `;
+                }
+
+            } catch (error) {
+                analyzeButton.disabled = false;
+                loader.style.display = 'none'; // Hide loader
+                console.error('Fetch error:', error);
+                resultTitle.textContent = "Analysis Error";
+                resultContent.innerHTML = `<p class="diseased">An error occurred while communicating with the analysis server.</p><p>Please ensure the backend server (app.py) is running and check the browser console for details.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

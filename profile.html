@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Skin Health AI</title> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a73e8; /* Professional blue */
+            --primary-hover-color: #4285f4; /* Lighter blue for hover/active */
+            --primary-dark-color: #0059c1; /* Darker blue for button hover */
+            --background-color: #f0f4f8;
+            --content-background: #ffffff;
+            --text-color: #333;
+            --sidebar-text-color: #fff;
+            --card-shadow: 0px 6px 20px rgba(0, 0, 0, 0.07);
+            --border-radius: 8px;
+            --input-border-color: #ccc;
+            --input-focus-border-color: var(--primary-color);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 275px;
+            background-color: var(--primary-color);
+            color: var(--sidebar-text-color);
+            display: flex;
+            flex-direction: column;
+            padding: 25px 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            margin: 0;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin: 18px 0;
+        }
+
+        .sidebar ul li a {
+            color: var(--sidebar-text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: var(--primary-hover-color);
+            transform: translateX(6px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .sidebar ul li a i {
+            margin-right: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px; 
+            height: 24px;
+        }
+
+        .sidebar ul li a i svg {
+            width: 24px; 
+            height: 24px;
+            color: var(--sidebar-text-color);
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            background-color: var(--background-color);
+        }
+        
+        .profile-page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--content-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px; /* Adjusted margin */
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .profile-header img {
+            border-radius: 50%;
+            width: 140px; /* Slightly smaller */
+            height: 140px;
+            object-fit: cover;
+            border: 5px solid var(--primary-hover-color); /* Themed border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 15px;
+        }
+        .profile-header h1 {
+            font-size: 28px; /* Adjusted size */
+            margin-top: 0;
+            color: var(--primary-color); /* Themed color */
+            font-weight: 600;
+        }
+        
+        .profile-details h2 {
+            font-size: 22px;
+            margin-bottom: 20px; /* Increased margin */
+            color: var(--primary-color);
+            text-align: left; /* Align to left for form style */
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px; /* Adjusted margin */
+            color: #444; /* Slightly darker label */
+            font-size: 15px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%; /* Use 100% and box-sizing */
+            padding: 12px 15px; /* Adjusted padding */
+            border: 1px solid var(--input-border-color);
+            border-radius: 6px; /* Consistent border-radius */
+            font-size: 16px;
+            background-color: #f9f9f9;
+            box-sizing: border-box; /* Important for width 100% */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--input-focus-border-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2); /* Focus ring */
+        }
+        .form-group input[readonly],
+        .form-group textarea[readonly] {
+            background-color: #e9ecef; /* Standard readonly background */
+            border-color: #ced4da;
+            color: #495057;
+            cursor: default;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: var(--sidebar-text-color);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: var(--primary-dark-color);
+            transform: translateY(-2px);
+        }
+        .button-group {
+            display: flex;
+            gap: 15px; /* Use gap for spacing */
+            margin-top: 30px;
+            justify-content: flex-end; /* Align buttons to the right */
+        }
+        .button-group .button.secondary { /* For cancel button */
+            background-color: #6c757d;
+        }
+        .button-group .button.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Styles for edit section - mostly inherited, can add specifics if needed */
+        #edit-profile-section .profile-header h1 {
+             color: var(--primary-color);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Skin AI</h2>
+            <ul>
+                <li><a href="home.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></i> Home</a></li>
+                <li><a href="profile.html" class="active"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></i> Profile</a></li>
+                <li><a href="analyze.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg></i> Analyze Skin</a></li>
+                <li><a href="history.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></i> History</a></li>
+                <li><a href="settings.html"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="profile-page-container">
+                <div id="profile-section" class="section active">
+                    <div class="profile-header">
+                        <img src="https://img.freepik.com/free-vector/user-research-concept-illustration_114360-8143.jpg?w=740&t=st=1717153000~exp=1717153600~hmac=24e25598a9003093a25a2677341c78034a79c06995450d21a97423e887c7264b" alt="User Profile Picture"> <h1 id="profile-name-display">Intense Hexaveres</h1> </div>
+                    <div class="profile-details">
+                        <h2>Profile Details</h2>
+                        <div class="form-group">
+                            <label for="profile-age-display">Age</label>
+                            <input type="text" id="profile-age-display" value="45" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email-display">Email</label>
+                            <input type="email" id="profile-email-display" value="intensehexaveres@gmail.com" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-contact-display">Contact Number</label>
+                            <input type="tel" id="profile-contact-display" value="91-9342180160" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-user-id-display">User ID</label>
+                            <input type="text" id="profile-user-id-display" value="IH2005" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-additional-info-display">Additional Info (e.g., Skin Type, Concerns)</label> <textarea id="profile-additional-info-display" rows="4" readonly>Sensitive skin, prone to redness.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-location-display">Location</label>
+                            <input type="text" id="profile-location-display" value="Himachal Pradesh, India" readonly>
+                        </div>
+                        <button class="button" id="edit-profile-button">Edit Profile</button>
+                    </div>
+                </div>
+
+                <div id="edit-profile-section" class="section">
+                    <div class="profile-header"> <img src="https://img.freepik.com/free-vector/user-research-concept-illustration_114360-8143.jpg?w=740&t=st=1717153000~exp=1717153600~hmac=24e25598a9003093a25a2677341c78034a79c06995450d21a97423e887c7264b" alt="User Profile Picture" id="edit-profile-img-preview">
+                        <h1>Edit Profile</h1>
+                    </div>
+                    <div class="profile-details"> <h2>Update Your Details</h2>
+                        <div class="form-group">
+                            <label for="edit-profile-name">Name</label>
+                            <input type="text" id="edit-profile-name" value="Intense Hexaveres">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-age">Age</label>
+                            <input type="number" id="edit-profile-age" value="45">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-email">Email</label>
+                            <input type="email" id="edit-profile-email" value="intensehexaveres@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-contact">Contact Number</label>
+                            <input type="tel" id="edit-profile-contact" value="91-9342180160">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-user-id">User ID</label>
+                            <input type="text" id="edit-profile-user-id" value="IH2005" readonly> </div>
+                        <div class="form-group">
+                            <label for="edit-profile-additional-info">Additional Info (e.g., Skin Type, Concerns)</label>
+                            <textarea id="edit-profile-additional-info" rows="4">Sensitive skin, prone to redness.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-location">Location</label>
+                            <input type="text" id="edit-profile-location" value="Himachal Pradesh, India">
+                        </div>
+                        <div class="button-group">
+                            <button class="button secondary" id="cancel-edit-button">Cancel</button>
+                            <button class="button" id="save-profile-button">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const profileSection = document.getElementById('profile-section');
+        const editProfileSection = document.getElementById('edit-profile-section');
+        
+        const editProfileButton = document.getElementById('edit-profile-button');
+        const saveProfileButton = document.getElementById('save-profile-button');
+        const cancelEditButton = document.getElementById('cancel-edit-button');
+
+        // Function to populate edit form from display fields
+        function populateEditForm() {
+            document.getElementById('edit-profile-name').value = document.getElementById('profile-name-display').textContent;
+            document.getElementById('edit-profile-age').value = document.getElementById('profile-age-display').value;
+            document.getElementById('edit-profile-email').value = document.getElementById('profile-email-display').value;
+            document.getElementById('edit-profile-contact').value = document.getElementById('profile-contact-display').value;
+            document.getElementById('edit-profile-user-id').value = document.getElementById('profile-user-id-display').value; // Though readonly
+            document.getElementById('edit-profile-additional-info').value = document.getElementById('profile-additional-info-display').value;
+            document.getElementById('edit-profile-location').value = document.getElementById('profile-location-display').value;
+        }
+
+        editProfileButton.addEventListener('click', function() {
+            populateEditForm();
+            profileSection.classList.remove('active');
+            editProfileSection.classList.add('active');
+        });
+
+        cancelEditButton.addEventListener('click', function() {
+            editProfileSection.classList.remove('active');
+            profileSection.classList.add('active');
+        });
+
+        saveProfileButton.addEventListener('click', function() {
+            // Get values from edit fields
+            const name = document.getElementById('edit-profile-name').value;
+            const age = document.getElementById('edit-profile-age').value;
+            const email = document.getElementById('edit-profile-email').value;
+            const contact = document.getElementById('edit-profile-contact').value;
+            const userId = document.getElementById('edit-profile-user-id').value;
+            const additionalInfo = document.getElementById('edit-profile-additional-info').value;
+            const location = document.getElementById('edit-profile-location').value;
+
+            // Set values to profile display fields
+            document.getElementById('profile-name-display').textContent = name;
+            document.getElementById('profile-age-display').value = age;
+            document.getElementById('profile-email-display').value = email;
+            document.getElementById('profile-contact-display').value = contact;
+            document.getElementById('profile-user-id-display').value = userId;
+            document.getElementById('profile-additional-info-display').value = additionalInfo;
+            document.getElementById('profile-location-display').value = location;
+
+            // Here you would typically send the updated data to a backend server
+            // For now, we just update the display and switch views.
+            alert('Profile updated successfully!'); // Placeholder for actual save
+
+            editProfileSection.classList.remove('active');
+            profileSection.classList.add('active');
+        });
+    </script>
+</body>
+</html>

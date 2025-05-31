@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Skin AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a73e8; /* Professional blue */
+            --primary-hover-color: #4285f4; 
+            --primary-dark-color: #ba4d73; 
+            --background-color: #f0f4f8;
+            --content-background: #ffffff;
+            --text-color: #333;
+            --light-text-color: #555;
+            --form-background: rgba(255, 255, 255, 0.95); /* Slightly less transparent for better readability */
+            --border-radius: 8px;
+            --input-border-color: #ccc;
+            --input-focus-border-color: var(--primary-color);
+            --card-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex; 
+            min-height: 100vh; 
+            flex-direction: column; 
+        }
+
+        #main-content {
+            display: flex;
+            flex-grow: 1; 
+            height: 100vh; 
+        }
+
+        .left-content {
+            flex: 1;
+            background-color: var(--content-background); 
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.05); 
+            z-index: 1; 
+        }
+
+        .left-content h1 {
+            font-size: 42px; 
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .left-content p {
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: var(--light-text-color);
+            max-width: 500px;
+        }
+
+        .right-content {
+            flex: 1.2; 
+            /* === NEW BACKGROUND IMAGE URL GOES HERE === */
+            background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'); /* Example: Medical/Tech background */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px; 
+        }
+
+        .form-container {
+            background-color: var(--form-background);
+            padding: 40px; 
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 400px; 
+        }
+
+        .form-container h2 {
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .form-container label {
+            font-size: 14px;
+            color: var(--light-text-color);
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--input-border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-container input[type="email"]:focus,
+        .form-container input[type="password"]:focus {
+            border-color: var(--input-focus-border-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+
+        .show-password {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--light-text-color);
+        }
+
+        .show-password label {
+            margin: 0 0 0 5px; 
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .show-password input[type="checkbox"] {
+            margin-right: 5px;
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        .form-container button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-container button[type="submit"]:hover {
+            background-color: var(--primary-dark-color);
+            transform: translateY(-2px);
+        }
+
+        .form-container p {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .form-container p a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .form-container p a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary-dark-color); 
+            color: #f0f4f8; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        footer .footer-links a {
+            color: #f0f4f8;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <section id="main-content">
+        <div class="left-content">
+            <h1>Welcome to Skin AI</h1>
+            <p>Your intelligent partner for preliminary skin health analysis. Upload an image and gain insights. This tool is for informational purposes and does not replace professional medical advice.</p>
+            <p>Early awareness can make a difference. Let's explore your skin's story together.</p>
+        </div>
+        
+        <div class="right-content">
+            <div class="form-container" id="loginFormContainer">
+                <h2>User Login</h2>
+                <form id="loginForm">
+                    <label for="loginEmail">Email Address</label>
+                    <input id="loginEmail" name="email" type="email" placeholder="you@example.com" required>
+                    
+                    <label for="loginPassword">Password</label>
+                    <input id="loginPassword" name="password" type="password" placeholder="Enter your password" required>
+                    
+                    <div class="show-password">
+                        <input type="checkbox" id="showLoginPassword"> 
+                        <label for="showLoginPassword">Show Password</label>
+                    </div>
+                    
+                    <button type="submit">Log In</button>
+                    <p>Don't have an account? <a href="#" id="showSignUpForm">Sign up here</a></p>
+                </form>
+            </div>
+
+            <div class="form-container hidden" id="signUpFormContainer">
+                <h2>Create Account</h2>
+                <form id="signUpForm">
+                    <label for="signupEmail">Email Address</label>
+                    <input id="signupEmail" name="email" type="email" placeholder="you@example.com" required>
+                    
+                    <label for="signupPassword">Create Password</label>
+                    <input id="signupPassword" name="password" type="password" placeholder="Choose a strong password" required>
+                    
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Re-enter your password" required>
+                    
+                    <div class="show-password">
+                        <input type="checkbox" id="showSignUpPassword">
+                        <label for="showSignUpPassword">Show Passwords</label>
+                    </div>
+                    
+                    <button type="submit">Sign Up</button>
+                    <p>Already have an account? <a href="#" id="showLoginForm">Log in here</a></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Skin AI. All rights reserved. For informational purposes only.</p>
+        <div class="footer-links">
+            <a href="#about-us" class="footer-link">About Us</a>
+            <a href="#contact" class="footer-link">Contact</a>
+            <a href="#privacy" class="footer-link">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const signUpForm = document.getElementById('signUpForm');
+        const loginFormContainer = document.getElementById('loginFormContainer');
+        const signUpFormContainer = document.getElementById('signUpFormContainer');
+        const showSignUpFormLink = document.getElementById('showSignUpForm');
+        const showLoginFormLink = document.getElementById('showLoginForm');
+        
+        showSignUpFormLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginFormContainer.classList.add('hidden');
+            signUpFormContainer.classList.remove('hidden');
+        });
+
+        showLoginFormLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            signUpFormContainer.classList.add('hidden');
+            loginFormContainer.classList.remove('hidden');
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent actual form submission for now
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                alert('Please fill in both email and password fields.');
+                return;
+            }
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            // Simulate successful login for demo purposes
+            console.log('Login attempt with:', { email, password });
+            // In a real application, you would send this to a backend for authentication.
+            // If authentication is successful:
+            alert('Login successful! Redirecting to dashboard...');
+            window.location.href = 'home.html'; // Redirect to the home page of the dashboard
+        });
+
+        signUpForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent actual form submission for now
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!email || !password || !confirmPassword) {
+                alert('Please fill in all fields for sign-up.');
+                return;
+            }
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please re-enter.');
+                return;
+            }
+            
+            // Simulate successful sign-up
+            console.log('Sign-up attempt with:', { email, password });
+            // In a real application, you would send this to a backend to create an account.
+            alert('Sign-up successful! Please log in.');
+            // Switch to login form
+            signUpFormContainer.classList.add('hidden');
+            loginFormContainer.classList.remove('hidden');
+            loginForm.reset(); // Clear login form fields
+            signUpForm.reset(); // Clear sign-up form fields
+        });
+
+        document.getElementById('showLoginPassword').addEventListener('change', function() {
+            document.getElementById('loginPassword').type = this.checked ? 'text' : 'password';
+        });
+
+        document.getElementById('showSignUpPassword').addEventListener('change', function() {
+            const passType = this.checked ? 'text' : 'password';
+            document.getElementById('signupPassword').type = passType;
+            document.getElementById('confirmPassword').type = passType;
+        });
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    </script>
+</body>
+</html>
